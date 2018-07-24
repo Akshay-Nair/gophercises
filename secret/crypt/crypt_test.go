@@ -1,27 +1,34 @@
 package crypt
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidEncrypt(t *testing.T) {
+var hexCode string
+
+func TestEncrypt(t *testing.T) {
 	secret, err := Encrypt("hello123", "abc")
-	fmt.Println("secret")
+	hexCode = secret
 	assert.NotEqualf(t, len(secret), 0, "they must not be equal")
-	assert.Equalf(t, len(err.Error()), 0, "they should be equal")
+	assert.Equalf(t, err, nil, "they should be equal")
 }
 
-func TestInValidKeyEncrypt(t *testing.T) {
-	secret, err := Encrypt("", "abc")
-	assert.Equalf(t, len(secret), 0, "they must not be equal")
-	assert.NotEqualf(t, len(err.Error()), 0, "they should be equal")
+func TestDecrypt(t *testing.T) {
+	secret, err := Decrypt("hello123", hexCode)
+	assert.NotEqualf(t, len(secret), 0, "they must not be equal")
+	assert.Equalf(t, err, nil, "they should be equal")
 }
 
-func TestInValidSecretEncrypt(t *testing.T) {
-	secret, err := Encrypt("hello123", "")
+func TestInvalidKeyDecrypt(t *testing.T) {
+	secret, err := Decrypt("hello123", "123333")
 	assert.Equalf(t, len(secret), 0, "they must not be equal")
-	assert.NotEqualf(t, len(err.Error()), 0, "they should be equal")
+	assert.NotEqualf(t, err, nil, "they should be equal")
+}
+
+func TestInvalidHexcodeDecrypt(t *testing.T) {
+	secret, err := Decrypt("hello123", "1+3333")
+	assert.Equalf(t, len(secret), 0, "they must not be equal")
+	assert.NotEqualf(t, err, nil, "they should be equal")
 }
