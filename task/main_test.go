@@ -4,6 +4,8 @@ import (
 	"os"
 	"testing"
 
+	"github.ibm.com/CloudBroker/dash_utils/dashtest"
+
 	"github.com/atrox/homedir"
 )
 
@@ -27,6 +29,7 @@ func clearFile() {
 
 func TestMain(m *testing.M) {
 	clearFile()
+	dashtest.ControlCoverage(m)
 	m.Run()
 	clearFile()
 }

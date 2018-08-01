@@ -3,6 +3,8 @@ package filehandle
 import (
 	"testing"
 
+	"github.ibm.com/CloudBroker/dash_utils/dashtest"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +22,7 @@ func TestGetContent(t *testing.T) {
 			"they should be equal",
 		},
 		{
-			"/home/gslab/go/src/middleware/main.go",
+			"/home/gslab/go/src/gophercises/middleware/main.go",
 			true,
 			false,
 			"they should be equal",
@@ -42,4 +44,8 @@ func TestGetContent(t *testing.T) {
 		assert.Equalf(t, true, check, test.msg)
 	}
 
+}
+
+func TestMain(m *testing.M) {
+	dashtest.ControlCoverage(m)
 }

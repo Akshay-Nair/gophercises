@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"middleware/content"
-	"middleware/filehandle"
+	"gophercises/middleware/content"
+	"gophercises/middleware/filehandle"
 	"net/http"
 	"runtime/debug"
 	"strconv"

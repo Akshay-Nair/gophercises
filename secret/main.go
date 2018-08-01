@@ -1,7 +1,7 @@
 package main
 
 import (
-	"secret/cmd"
+	"gophercises/secret/cmd"
 )
 
 func main() {

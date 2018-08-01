@@ -143,11 +143,3 @@ func TestNegConnection(t *testing.T) {
 	file.Close()
 	os.Remove("testing.txt")
 }
-
-func TestMain(m *testing.M) {
-	dir, _ := getHomeDir()
-	dir = dir + "/task_db.db"
-	os.Remove(dir)
-	Connection()
-	m.Run()
-}

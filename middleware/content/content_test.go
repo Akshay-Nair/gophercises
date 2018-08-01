@@ -4,6 +4,8 @@ import (
 	"regexp"
 	"testing"
 
+	"github.ibm.com/CloudBroker/dash_utils/dashtest"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -74,4 +76,8 @@ func TestFindAndReplacePath(t *testing.T) {
 		testResult := re.FindAllString(testOutput, -1)
 		assert.Equalf(t, len(testResult), test.urlCount, test.msg)
 	}
+}
+
+func TestMain(m *testing.M) {
+	dashtest.ControlCoverage(m)
 }

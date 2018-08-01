@@ -3,10 +3,10 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"gophercises/task/db"
 	"io/ioutil"
 	"os"
 	"regexp"
-	"task/db"
 	"testing"
 
 	"github.com/atrox/homedir"

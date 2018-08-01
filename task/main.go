@@ -1,7 +1,7 @@
 package main
 
 import (
-	"task/cmd"
+	"gophercises/task/cmd"
 )
 
 func main() {

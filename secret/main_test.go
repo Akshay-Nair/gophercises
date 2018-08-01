@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.ibm.com/CloudBroker/dash_utils/dashtest"
+)
 
 func TestM(t *testing.T) {
 	defer func() {
@@ -10,4 +14,8 @@ func TestM(t *testing.T) {
 		}
 	}()
 	main()
+}
+
+func TestMain(m *testing.M) {
+	dashtest.ControlCoverage(m)
 }

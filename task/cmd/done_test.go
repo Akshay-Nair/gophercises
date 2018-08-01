@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"errors"
+	"gophercises/task/db"
 	"io/ioutil"
 	"os"
 	"regexp"
-	"task/db"
 	"testing"
 
 	"github.com/atrox/homedir"

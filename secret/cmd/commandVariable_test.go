@@ -8,6 +8,8 @@ import (
 	"regexp"
 	"testing"
 
+	"github.ibm.com/CloudBroker/dash_utils/dashtest"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -186,4 +188,8 @@ func TestNegGet(t *testing.T) {
 	file.Seek(0, 0)
 	os.Stdout = oldStdout
 	file.Close()
+}
+
+func TestMain(m *testing.M) {
+	dashtest.ControlCoverage(m)
 }

@@ -2,13 +2,12 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"regexp"
-	"task/db"
 	"testing"
 
-	"github.com/atrox/homedir"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +23,6 @@ func TestNegAddCmd(t *testing.T) {
 	oldStdout := os.Stdout
 	os.Stdout = file
 	closeDB = func() {
-
 	}
 	addCommand.Run(addCommand, []string{"hello"})
 	file.Seek(0, 0)
@@ -32,11 +30,12 @@ func TestNegAddCmd(t *testing.T) {
 	if err != nil {
 		t.Error("error occured while test case : ", err)
 	}
-	val, _ := regexp.Match("failed to add", content)
+	val, _ := regexp.Match("Failed to add", content)
 	assert.Equalf(t, val, true, "they should be equal")
 	file.Truncate(0)
 	file.Seek(0, 0)
 	os.Stdout = oldStdout
+	fmt.Println("this is the output : ", string(content))
 	file.Close()
 
 }
@@ -77,13 +76,4 @@ func TestAddCmd(t *testing.T) {
 	}
 	os.Stdout = oldStdout
 	file.Close()
-}
-
-func TestMain(m *testing.M) {
-	closeDB()
-	dir, _ := homedir.Dir()
-	dir = dir + "/task_db.db"
-	os.Remove(dir)
-	db.Connection()
-	m.Run()
 }

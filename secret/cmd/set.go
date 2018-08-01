@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"secret/crypt"
-	"secret/fileHandle"
+	"gophercises/secret/crypt"
+	"gophercises/secret/fileHandle"
 
 	"github.com/spf13/cobra"
 )

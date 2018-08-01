@@ -3,6 +3,8 @@ package crypt
 import (
 	"testing"
 
+	"github.ibm.com/CloudBroker/dash_utils/dashtest"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -31,4 +33,8 @@ func TestInvalidHexcodeDecrypt(t *testing.T) {
 	secret, err := Decrypt("hello123", "1+3333")
 	assert.Equalf(t, len(secret), 0, "they must not be equal")
 	assert.NotEqualf(t, err, nil, "they should be equal")
+}
+
+func TestMain(m *testing.M) {
+	dashtest.ControlCoverage(m)
 }

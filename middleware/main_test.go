@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"testing"
 
+	"github.ibm.com/CloudBroker/dash_utils/dashtest"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -115,6 +117,7 @@ func TestM(t *testing.T) {
 func TestMain(m *testing.M) {
 	file, _ := os.OpenFile("testing.txt", os.O_CREATE, 0000)
 	file.Close()
+	dashtest.ControlCoverage(m)
 	m.Run()
 	os.Remove("testing.txt")
 }
