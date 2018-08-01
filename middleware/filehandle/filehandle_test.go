@@ -20,7 +20,7 @@ func TestGetContent(t *testing.T) {
 			"they should be equal",
 		},
 		{
-			"/home/gslab/go/src/middleware/dir/dir.go",
+			"/home/gslab/go/src/middleware/main.go",
 			true,
 			false,
 			"they should be equal",

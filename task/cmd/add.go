@@ -12,6 +12,8 @@ var closeDB = func() {
 	db.DbInstance.Close()
 }
 
+var addNewTask = db.AddTask
+
 //variable addCommand defines the functionality and usage of add subcommand.
 var addCommand = &cobra.Command{
 
@@ -23,7 +25,7 @@ var addCommand = &cobra.Command{
 			fmt.Println("invalid argument")
 			return
 		}
-		if db.AddTask(task) != nil {
+		if addNewTask(task) != nil {
 			fmt.Println("Failed to add ", task, "task")
 		} else {
 			fmt.Println(task, "added successfully")

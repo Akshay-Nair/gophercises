@@ -15,6 +15,10 @@ import (
 //variable to set filename.
 var fileName string
 
+var getHomeDir = homedir.Dir
+
+var exit = os.Exit
+
 //SetSecret method is to save a key and a value associated into the csv file
 //it returns an error if one occurs.
 func SetSecret(ServiceName, Key string) error {
@@ -54,11 +58,15 @@ func GetSecret(ServiceName string) (string, error) {
 	return key, err
 }
 
-func init() {
-	home, err := homedir.Dir()
+func setHomeDir() {
+	home, err := getHomeDir()
 	if err != nil {
 		fmt.Println("error while fetching home dir")
-		os.Exit(1)
+		exit(1)
 	}
 	fileName = home + "/secret.csv"
+}
+
+func init() {
+	setHomeDir()
 }

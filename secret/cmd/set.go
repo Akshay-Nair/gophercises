@@ -22,9 +22,11 @@ Arguments:
 service_name	name of the service of which the key is to be saved
 secret_key	secret key related to the service name` + "\n\n\n"
 
+var encryptFunc = crypt.Encrypt
+
 //function saveKey performs the operations for saving the secret into the file in encrypted form.
 func saveKey(Secret, ServiceName string) {
-	encryptedKey, err := crypt.Encrypt(key, Secret)
+	encryptedKey, err := encryptFunc(key, Secret)
 	if err == nil {
 		err = fileHandle.SetSecret(ServiceName, encryptedKey)
 	}

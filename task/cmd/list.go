@@ -7,13 +7,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var fetchRemainingTask = db.GetRemainingTask
+
 //variable lisCommand defines the functionality and usage of list subcommand
 var listCommand = &cobra.Command{
 
 	Use:   "list",
 	Short: "list all the tasks",
 	Run: func(cmd *cobra.Command, args []string) {
-		tasks, err := db.GetRemainingTask()
+		tasks, err := fetchRemainingTask()
 		if err != nil {
 			fmt.Println("Following error occured during the operation : ", err)
 		} else if len(tasks) == 0 {

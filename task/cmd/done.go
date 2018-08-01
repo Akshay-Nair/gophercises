@@ -7,13 +7,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var fetchFinishedTask = db.GetFinishedTask
+
 //variable doneCommand defines the functionality and usage of done subcommand
 var doneCommand = &cobra.Command{
 
 	Use:   "done",
 	Short: "list completed tasks",
 	Run: func(cmd *cobra.Command, args []string) {
-		tasks, err := db.GetFinishedTask()
+		tasks, err := fetchFinishedTask()
 		if err != nil {
 			fmt.Println("Following error occured during the operation : ", err)
 		} else if len(tasks) == 0 {

@@ -1,7 +1,11 @@
 package fileHandle
 
 import (
+	"errors"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -95,4 +99,34 @@ func TestWrite(t *testing.T) {
 		}
 		assert.Equalf(t, err, test.expected, "should be equal")
 	}
+}
+
+func TestNegFile(t *testing.T) {
+	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
+	oldStdout := os.Stdout
+	os.Stdout = file
+	tempFunc := getHomeDir
+	tempExit := exit
+	defer func() {
+		getHomeDir = tempFunc
+		exit = tempExit
+	}()
+	getHomeDir = func() (string, error) {
+		return "", errors.New("error occured")
+	}
+	exit = func(i int) {
+
+	}
+	setHomeDir()
+	file.Seek(0, 0)
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+	}
+	val, _ := regexp.Match("error", content)
+	assert.Equalf(t, val, true, "they should be equal")
+	file.Truncate(0)
+	file.Seek(0, 0)
+	os.Stdout = oldStdout
+	file.Close()
 }

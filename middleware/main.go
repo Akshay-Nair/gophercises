@@ -13,6 +13,12 @@ import (
 	"github.com/alecthomas/chroma/styles"
 )
 
+var findAndReplacePath = content.FindAndReplacePath
+
+var middlewareFunc = middleware
+
+var listenAndServeFunc = http.ListenAndServe
+
 func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "hello world")
 }
@@ -31,7 +37,6 @@ func debugFunc(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fileContent = err.Error()
 		}
-		//line, err1 = strconv.Atoi(lineNumber)
 		lexer := lexers.Get("go")
 		iterator, _ := lexer.Tokenise(nil, fileContent)
 		formatter := html.New(html.TabWidth(2), html.WithLineNumbers(), html.HighlightLines([][2]int{{line, line}}))
@@ -39,7 +44,6 @@ func debugFunc(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		fmt.Fprint(w, "<style>pre { font-size: 1.2em; }</style>")
 		formatter.Format(w, style, iterator)
-		//quick.Highlight(w, fileContent, "go", "html", "monokai")
 	} else {
 		fmt.Fprintln(w, "Invalid File Path Provided")
 	}
@@ -50,7 +54,7 @@ func middleware(app http.Handler) http.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				stackTrace := debug.Stack()
-				data, err := content.FindAndReplacePath(string(stackTrace))
+				data, err := findAndReplacePath(string(stackTrace))
 				if err == nil {
 					fmt.Fprintln(w, data)
 				} else {
@@ -67,5 +71,5 @@ func main() {
 	app.HandleFunc("/", hello)
 	app.HandleFunc("/panic", panicfunc)
 	app.HandleFunc("/debug", debugFunc)
-	http.ListenAndServe(":8008", middleware(app))
+	listenAndServeFunc(":8008", middlewareFunc(app))
 }

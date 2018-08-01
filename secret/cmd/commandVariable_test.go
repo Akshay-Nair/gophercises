@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -53,6 +54,36 @@ func TestSetCmd(t *testing.T) {
 	os.Stdout = oldStdout
 	file.Close()
 }
+
+func TestNegSet(t *testing.T) {
+	key = "hello123"
+	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
+	oldStdout := os.Stdout
+	os.Stdout = file
+	key = "hello123"
+	tempFunc := encryptFunc
+	defer func() {
+		encryptFunc = tempFunc
+	}()
+	//setting the encrypFunc with a function which would always return an error
+	encryptFunc = func(key string, text string) (string, error) {
+		return "", errors.New("error occured")
+	}
+
+	setCmd.Run(setCmd, []string{"abc", "abc123"})
+	file.Seek(0, 0)
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+	}
+	val, _ := regexp.Match("Following error occured", content)
+	assert.Equalf(t, val, true, "they should be equal")
+	file.Truncate(0)
+	file.Seek(0, 0)
+	os.Stdout = oldStdout
+	file.Close()
+}
+
 func TestIvdGetCmd(t *testing.T) {
 	key = "hello123"
 	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
@@ -126,4 +157,33 @@ func TestVldGet(t *testing.T) {
 	fmt.Println(output)
 	file.Close()
 
+}
+
+func TestNegGet(t *testing.T) {
+	key = "hello123"
+	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
+	oldStdout := os.Stdout
+	os.Stdout = file
+	key = "hello123"
+	tempFunc := decryptFunc
+	defer func() {
+		decryptFunc = tempFunc
+	}()
+	//setting the encrypFunc with a function which would always return an error
+	decryptFunc = func(key string, hexCode string) (string, error) {
+		return "", errors.New("error occured")
+	}
+
+	getCmd.Run(getCmd, []string{"abc", "abc123"})
+	file.Seek(0, 0)
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+	}
+	val, _ := regexp.Match("following error occured", content)
+	assert.Equalf(t, val, true, "they should be equal")
+	file.Truncate(0)
+	file.Seek(0, 0)
+	os.Stdout = oldStdout
+	file.Close()
 }

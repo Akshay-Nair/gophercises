@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -12,6 +13,35 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNegList(t *testing.T) {
+	tempdone := fetchRemainingTask
+
+	defer func() {
+		fetchRemainingTask = tempdone
+	}()
+
+	fetchRemainingTask = func() ([]string, error) {
+		return []string{}, errors.New("error occured")
+	}
+
+	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
+	oldStdout := os.Stdout
+	os.Stdout = file
+	listCommand.Run(listCommand, []string{})
+	file.Seek(0, 0)
+	content, err := ioutil.ReadAll(file)
+
+	if err != nil {
+		t.Error("error occured while test case : ", err)
+	}
+
+	val, _ := regexp.Match("error occured", content)
+	assert.Equalf(t, val, true, "they should be equal")
+	file.Truncate(0)
+	file.Seek(0, 0)
+	os.Stdout = oldStdout
+	file.Close()
+}
 func TestEmptyList(t *testing.T) {
 	db.DbInstance.Close()
 	dir, _ := homedir.Dir()

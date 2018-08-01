@@ -16,6 +16,14 @@ var DbInstance *bolt.DB
 
 const bucketName = "task"
 
+var markTestDone = MarkTask
+
+var fetchRemainingTask = GetRemainingTask
+
+var exit = os.Exit
+
+var getHomeDir = homedir.Dir
+
 //AddTask is to add new task into the database.
 func AddTask(task string) error {
 	err := DbInstance.Update(func(tx *bolt.Tx) error {
@@ -63,7 +71,7 @@ func MarkTask(task string) error {
 //DoTask takes a list of indexes and marks the tasks corresponding to as done.
 //It returns an error if it encounters one.
 func DoTask(idIndex []int) error {
-	tasks, err := GetRemainingTask()
+	tasks, err := fetchRemainingTask()
 	if err != nil {
 		return err
 	} else if len(tasks) == 0 {
@@ -73,7 +81,7 @@ func DoTask(idIndex []int) error {
 	for _, id := range idIndex {
 		if id < 1 || id > len(tasks) {
 			invalidID = append(invalidID, id)
-		} else if MarkTask(tasks[id-1]) != nil {
+		} else if markTestDone(tasks[id-1]) != nil {
 			fmt.Println("Task ", id, " was not deleted")
 		} else {
 			fmt.Println("Task ", tasks[id-1], "marked as completed")
@@ -114,14 +122,14 @@ func Connection() {
 	const bucketName = "task"
 	var err error
 	var dir string
-	dir, err = homedir.Dir()
+	dir, err = getHomeDir()
 	if err == nil {
 		dir = dir + "/task_db.db"
 		DbInstance, err = bolt.Open(dir, 0644, nil)
 	}
 	if err != nil {
 		fmt.Println("Following error occured while DB connection ", err)
-		os.Exit(1)
+		exit(1)
 	}
 }
 

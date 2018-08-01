@@ -3,10 +3,11 @@ package content
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
-	"middleware/location"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -25,7 +26,7 @@ func FindAndReplacePath(stackTrace string) (string, error) {
 			i++
 			if (i%2 == 1) && (i > 1) {
 				locationDetail := re.FindString(reader.Text())
-				path, line, err := location.ExtractPath(locationDetail)
+				path, line, err := extractPath(locationDetail)
 				if err == nil {
 					fmt.Fprintln(data, fmt.Sprintf(hyperLinkTemplate, path, line, path, line))
 				}
@@ -36,4 +37,13 @@ func FindAndReplacePath(stackTrace string) (string, error) {
 	}
 	fmt.Fprintln(data, "</body></html>")
 	return data.String(), err
+}
+
+func extractPath(location string) (string, int, error) {
+	strSlice := strings.Split(location, ":")
+	if len(strSlice) < 2 || len(strSlice) > 2 {
+		return "", 0, errors.New("invalid argument")
+	}
+	val, err := strconv.Atoi(strSlice[1])
+	return strSlice[0], val, err
 }

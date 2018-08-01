@@ -21,6 +21,8 @@ Flags:
 Arguments:
 service_name	name of the service of which the key is to be saved` + "\n\n\n"
 
+var decryptFunc = crypt.Decrypt
+
 //fetch key func is the operation carried out when get command is accessed
 //with correct arguments.
 func fetchKey(serviceName string) {
@@ -31,7 +33,7 @@ func fetchKey(serviceName string) {
 			fmt.Println("Secret Key for the service not found")
 			return
 		}
-		secretKey, err = crypt.Decrypt(key, hexSecretKey)
+		secretKey, err = decryptFunc(key, hexSecretKey)
 	}
 	if err != nil {
 		fmt.Println("following error occured while fetching the secret key : ", err)
